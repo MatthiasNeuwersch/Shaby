@@ -1,0 +1,27 @@
+{
+  "short_name": "App Shortname",
+  "name": "Appname",
+  "icons": [
+    {
+      "src":"/img/logo152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },{
+      "src":"/img/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },{
+      "src":"/img/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },{
+      "src":"/img/logo900.png",
+      "sizes": "900x900",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#A00020",
+  "theme_color": "#A00020",
+  "display": "standalone"
+}
