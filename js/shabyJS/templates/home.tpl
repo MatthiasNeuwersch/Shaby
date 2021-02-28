@@ -2,3 +2,5 @@
     <h1>Welcome to ShabyJS!</h1>
     <div id="partial-a-container"></div>
 </section>
+
+<button id="simplebutton">ASDF</button>

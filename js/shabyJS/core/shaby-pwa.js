@@ -1,45 +1,43 @@
 "use strict";
 import Shaby_Utils from './shaby-utils.js?v=0.1';
-import Shaby_SPA_Router from './shaby-spa-router.js?v=0.1';
+import Shaby_App_Lib from './../your-functions.js?v=0.1';
+import Shaby_Router from './shaby-router.js?v=0.1';
 import Shaby_Translator from './shaby-language.js?v=0.1';
 
+import {renderHeader} from '../partials/partial.header.js?v=0.1';
+import {renderFooter} from '../partials/partial.footer.js?v=0.1';
+
 /**********************************************************************
- *     Class-Bundle for PWAs.
- *     App-Shell needs an ID "#shaby_app".
+ *     Class-Bundle for Fuckn' Awzum PWAs.
  *
  *     @param:
- *     webRoot - Give me the root-URL of your App
- *     templatesPath - Give me the Path to your templates
- *       relative to your webRoot.
- *     routes - Give me an Object with "slug" : "template" Routes
- *     config - Want to store some Config in your App? Here you go!
- *     ...languages - Give me all languages you want your App to support.
+ *     Config-Object:
+ *       debugMode: Set true, if you want to get console.logs.
+ *       webRoot:   Give me the root-URL of your App
+ *       views:     Please provide an array of views, that will be
+ *                  available in your app.
  *
  *     ShaBy - 2021-02-27
  **********************************************************************/
 
 class Shaby_PWA{
     constructor(config) {
+        window.Shaby = this;
         this.system = {
             appContainer: document.getElementById('shabyJS'),
             debugMode: config.debugMode,
             webRoot: config.webRoot,
         };
         this.utils = new Shaby_Utils();
-
-        window.Shaby = this;
+        this.applib = new Shaby_App_Lib();
         this.translator = new Shaby_Translator(config.languages);
-        this.router = new Shaby_SPA_Router(config.views);
+        renderHeader(config.languages);
+        this.router = new Shaby_Router(config.views);
+        renderFooter();
         // this.model = model;
-        this.serviceWorker();
-    }
 
-    online(){
-        return navigator.onLine;
-    };
-
-    serviceWorker(){
         if('serviceWorker' in navigator) {
+            //TODO: Testen, ob der Pfad auch bei Quereinstieg funktioniert, oder ob man absolut braucht.
             navigator.serviceWorker.register('/js/shabyJS/core/serviceworker.js?')
                 .then(function() {
                     console.log('Service Worker Registered');
@@ -47,14 +45,14 @@ class Shaby_PWA{
         }
     }
 
-    /********************************************
-     * Delivers Resource in current Language.
-     * key should be found in shaby-language.js
-     ********************************************/
+    /***********************************************************************************
+     *  Delivers resource in current language, when key is found in shaby-language.js
+     *
+     *  Use: window.Shaby.t(key);
+     ***********************************************************************************/
     t(key, toLowerCase){
-        return this.translator.t(this.currentLanguage, key);
+        return this.translator.t(key);
     }
-
 }
 
 export default Shaby_PWA;

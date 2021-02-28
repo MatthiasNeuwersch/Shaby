@@ -11,7 +11,6 @@ export default class Shaby_View{
     constructor(slug, init){
         this.slug = slug;
         this.init = init;
-        this.getParams = {};
     }
 
     isActive(){
@@ -23,29 +22,30 @@ export default class Shaby_View{
         }
     };
 
-    renderTemplate(templateName, container, values = false){
-        let slug = this.slug;
+    static renderTemplate(templateName, container, values = false){
         return new Promise((resolve, reject) => {
-            $.get(window.Shaby.system.webRoot+"/js/shabyJS/templates/"+templateName+".tpl?v=0.1", function(tpl) {
-                let markup = tpl,
-                    open = /<%>/gi,
-                    result,
-                    indices_open = [],
-                    indices_close = [],
-                    even = true;
-                while ( (result = open.exec(tpl)) ) {
-                    even ? indices_open.push(result.index): indices_close.push(result.index);
-                    even = !even;
-                }
-                for(let i = 0; i < indices_close.length; i++){
-                    let word = window.Shaby.t(tpl.substring(indices_open[i]+3, indices_close[i]));
-                    markup = markup.replace(tpl.substring(indices_open[i], indices_close[i]+3), word);
-                }
-                container.innerHTML = markup;
-                this.getParams = Shaby_View.getGetParameters();
-                window.dispatchEvent(new CustomEvent("templateRendered", {detail : {templateName: templateName}}));
-                resolve();
-            });
+            fetch(window.Shaby.system.webRoot+"/js/shabyJS/templates/"+templateName+".tpl?v=0.1")
+                .then(response => response.text())
+                .then(tpl=> {
+                    console.log(tpl);
+                    let markup = tpl,
+                        open = /<%>/gi,
+                        result,
+                        indices_open = [],
+                        indices_close = [],
+                        even = true;
+                    while ( (result = open.exec(tpl)) ) {
+                        even ? indices_open.push(result.index): indices_close.push(result.index);
+                        even = !even;
+                    }
+                    for(let i = 0; i < indices_close.length; i++){
+                        let word = window.Shaby.t(tpl.substring(indices_open[i]+3, indices_close[i]));
+                        markup = markup.replace(tpl.substring(indices_open[i], indices_close[i]+3), word);
+                    }
+                    container.innerHTML = markup;
+                    window.dispatchEvent(new CustomEvent("templateRendered", {detail : {templateName: templateName}}));
+                    resolve();
+                });
         });
     }
 

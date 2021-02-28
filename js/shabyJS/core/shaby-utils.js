@@ -3,7 +3,7 @@
 /***************************************************
  *  A Collectorclass for several useful functions
  *
- *  ShaBy, 2019-04-20
+ *  ShaBy, 2019-04-20, v0.1
  ***************************************************/
 
 class Shaby_Utils{
